@@ -6,9 +6,12 @@ from PIL import Image
 from io import BytesIO
 import os
 from flask_cors import CORS
+import sqlite3
+from datetime import datetime
 
 app = Flask(__name__)
 cors = CORS(app)
+
 
 def read_barcode(image_path):
     """Reads the barcode from the image and returns the entry number"""
@@ -75,6 +78,26 @@ def scan():
 @app.route("/update_entry", methods=["POST"])
 def update_entry():
     entry_number = request.get_json().get("entry_number")
+
+    conn = sqlite3.connect("Entry_Gate.db")
+    cur=conn.cursor()
+    cur.execute(f'select *from student_data where Entry="{entry_number}"')
+    a = cur.fetchone()
+    if a is None:
+        return "Invalid Entry Number"
+    cur.execute(f'select * from entry_log where Entry_No="{entry_number}"')
+    b = cur.fetchall()
+    if len(b) != 0:
+        a = b[-1]
+        if a[4] == "NULL":
+            cur.execute(f'UPDATE entry_log SET time_in = ? WHERE Entry_No = ? AND time_in = "NULL"', (datetime.strftime(datetime.now(),"%d-%m-%Y %H:%M:%S"), entry_number))
+        else:
+            cur.execute('insert into entry_log values(?,?,?,?,?)',(a[0],a[1],a[2],datetime.strftime(datetime.now(),'%d-%m-%Y %H:%M:%S'), "NULL"))
+    else:
+        cur.execute('insert into entry_log values(?,?,?,?,?)',(a[0], a[1], a[2], datetime.strftime(datetime.now(),'%d-%m-%Y %H:%M:%S'), "NULL"))
+
+    conn.commit()
+    conn.close()
     return "Updated "+str(entry_number)
 
 if __name__ == "__main__":
