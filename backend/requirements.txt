@@ -1,0 +1,6 @@
+flask
+opencv-python
+pyzbar
+Pillow
+requests
+flask_cors

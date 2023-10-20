@@ -5,9 +5,10 @@ import base64
 from PIL import Image
 from io import BytesIO
 import os
-from PIL import Image
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 
 def read_barcode(image_path):
     """Reads the barcode from the image and returns the entry number"""
@@ -67,7 +68,7 @@ def scan():
     delete_image(image_path)
     # CODE END
     if entry_number is None:
-        return "No barcode found"  
+        return "No barcode found"
     return entry_number
 
 if __name__ == "__main__":
