@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Webcam from "react-webcam";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 function dataURItoBlob(dataURI) {
   const byteString = atob(dataURI.split(',')[1]);
@@ -18,6 +19,7 @@ export default function StudentEntry(){
   const router = useRouter();
 
   const webcamRef = React.useRef(null);
+  var intervalId;
 
   const capture = React.useCallback(() => {
     const imageb64 = webcamRef.current.getScreenshot();
@@ -31,25 +33,42 @@ export default function StudentEntry(){
       },
     })
     .then(response => {
-      console.log(response.data);
-      document.getElementById("status").innerText = response.data;
+      if(response.data.length == 11){ // Our Entry Number
+        document.getElementById("status").innerText = "Updating Entry"
+        clearInterval(intervalId);
+        const entry_number = String(response.data) 
+        console.log(entry_number)
+        axios.post("http://localhost:5000/update_entry", {entry_number:entry_number})
+          .then(resp=>{
+            document.getElementById("toast").innerText = resp.data
+            document.getElementById("toast").style.display = "flex"
+            // toast.warning(resp.data)
+            setTimeout(()=>router.push("/"), 5000);
+          })
+      }else{
+        document.getElementById("status").innerText = response.data
+      }
     })
     .catch(error => {
       // Handle errors
       console.log(error);
     });
-  }, [webcamRef]);
+  }, []);
 
   useEffect(()=>{
-    setInterval(capture, 5000);
+    if (intervalId) {
+        clearInterval(intervalId);
+    }
+    intervalId = setInterval(capture, 5000);
   }, []);
 
   return (
     <main>
+      {/* <ToastContainer /> */}
       <Head>
         <title>Student Entry | EZFlow</title>
       </Head>
-      <header className="w-full p-4 h-full flex justify-center items-center" style={{height:"100vh"}}>
+      <header className="w-full p-4 h-full flex justify-center items-center relative" style={{height:"100vh"}}>
         <div className="flex-1 p-8">
           <h1 className="text-5xl font-bold my-4">Scan the Barcode on your ID Card</h1>
           <h2 className="font-fine text-xl flex items-center">
@@ -70,6 +89,7 @@ export default function StudentEntry(){
           />
         </div>
         <img src="" alt="" id="test" />
+        <div id="toast" className="absolute top-4 right-4 bg-black shadow-lg shadow-slate-900 px-4 py-4 rounded-2xl hidden">        </div>
       </header>
     </main>
   )

@@ -67,9 +67,15 @@ def scan():
     entry_number = read_barcode(image_path)
     delete_image(image_path)
     # CODE END
+    # return "2023MEB1360"
     if entry_number is None:
         return "No barcode found"
     return entry_number
+
+@app.route("/update_entry", methods=["POST"])
+def update_entry():
+    entry_number = request.get_json().get("entry_number")
+    return "Updated "+str(entry_number)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
