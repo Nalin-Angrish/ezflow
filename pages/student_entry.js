@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Webcam from "react-webcam";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 
 function dataURItoBlob(dataURI) {
   const byteString = atob(dataURI.split(',')[1]);
@@ -40,9 +41,9 @@ export default function StudentEntry(){
         console.log(entry_number)
         axios.post("http://localhost:5000/update_entry", {entry_number:entry_number})
           .then(resp=>{
-            document.getElementById("toast").innerText = resp.data
-            document.getElementById("toast").style.display = "flex"
-            // toast.warning(resp.data)
+            toast.success(resp.data, {
+              theme: "dark"
+            })
             setTimeout(()=>router.push("/"), 5000);
           })
       }else{
@@ -89,7 +90,6 @@ export default function StudentEntry(){
           />
         </div>
         <img src="" alt="" id="test" />
-        <div id="toast" className="absolute top-4 right-4 bg-black shadow-lg shadow-slate-900 px-4 py-4 rounded-2xl hidden">        </div>
       </header>
     </main>
   )
