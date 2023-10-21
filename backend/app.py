@@ -100,5 +100,26 @@ def update_entry():
     conn.close()
     return "Updated "+str(entry_number)
 
+
+@app.route("/guest_entry", methods=["POST"])
+def guest_entry():
+    name = request.get_json().get("name")
+    phone = request.get_json().get("phone")
+    address = request.get_json().get("address")
+    purpose = request.get_json().get("purpose")
+
+    conn = sqlite3.connect("Entry_Gate.db")
+    cur=conn.cursor()
+    cur.execute(f'select * from guest_log where Name="{name}"')
+    a = cur.fetchall()
+    if len(a) == 0 or a[-1][5] != "NULL":
+        cur.execute('insert into guest_log values(?,?,?,?,?,?)',(name, phone, address, purpose, datetime.strftime(datetime.now(),'%d-%m-%Y %H:%M:%S'), "NULL"))
+    else:
+        cur.execute('UPDATE guest_log SET time_out = ? WHERE Name = ? AND time_out = "NULL"', (datetime.strftime(datetime.now(),"%d-%m-%Y %H:%M:%S"), name))
+
+    conn.commit()
+    conn.close()
+    return "Updated Guest Entry"
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

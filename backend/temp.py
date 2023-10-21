@@ -11,5 +11,8 @@ cur=conn.cursor()
 # delete all rows of table entry_log
 # cur.execute("DELETE FROM entry_log")
 
+# Create table guest_log with columns name, phone, address, purpose of visit, time_in, time_out
+# cur.execute("CREATE TABLE guest_log (Name TEXT, Phone TEXT, Address TEXT, Purpose TEXT, time_in TEXT, time_out TEXT)")
+
 conn.commit()
 conn.close()
