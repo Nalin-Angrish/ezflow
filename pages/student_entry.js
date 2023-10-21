@@ -3,8 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Webcam from "react-webcam";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'
+import { toast } from "react-toastify";
 
 function dataURItoBlob(dataURI) {
   const byteString = atob(dataURI.split(',')[1]);
@@ -44,7 +43,7 @@ export default function StudentEntry(){
             toast.success(resp.data, {
               theme: "dark"
             })
-            setTimeout(()=>router.push("/"), 5000);
+            setTimeout(()=>router.push("/"), 2000);
           })
       }else{
         document.getElementById("status").innerText = response.data
@@ -54,7 +53,7 @@ export default function StudentEntry(){
       // Handle errors
       console.log(error);
     });
-  }, []);
+  }, [webcamRef]);
 
   useEffect(()=>{
     if (intervalId) {
@@ -65,7 +64,6 @@ export default function StudentEntry(){
 
   return (
     <main>
-      {/* <ToastContainer /> */}
       <Head>
         <title>Student Entry | EZFlow</title>
       </Head>
@@ -89,7 +87,6 @@ export default function StudentEntry(){
             screenshotFormat="image/jpeg"
           />
         </div>
-        <img src="" alt="" id="test" />
       </header>
     </main>
   )

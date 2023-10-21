@@ -12,9 +12,13 @@ export default function Home() {
         <h1 className="text-5xl font-bold my-4">EZFlow</h1>
         <h2 className="text-xl font-thin my-2">Seamless Entry Management for Students of IIT Ropar</h2>
         <div className="w-full h-full flex">
-          <button className="flex-1 bg-green-500 m-10 text-2xl rounded-xl hover:bg-green-800 hover:translate-y-3" onClick={()=>{router.push("/student_entry")}}>Student Entry <span className="font-thin"><br/>(ID Card Required)</span></button>
-          <button className="flex-1 bg-green-500 m-10 text-2xl rounded-xl hover:bg-green-800 hover:translate-y-3" onClick={()=>{router.push("/guest_entry")}}>Guest Entry</button>
-        </div>
+          <div className="flex-1 flex justify-center items-center">
+            <button className="bg-green-500 m-10 text-4xl rounded-xl hover:bg-green-800 hover:translate-y-3 p-16" style={{width:"450px", height:"300px"}} onClick={()=>{router.push("/student_entry")}}>Student Entry <span className="font-thin"><br/>(ID Card Required)</span></button>
+          {/* </div>
+          <div className="flex-1 flex justify-center items-center"> */}
+          <button className="bg-green-500 m-10 text-4xl rounded-xl hover:bg-green-800 hover:translate-y-3 p-16" style={{width:"450px", height:"300px"}} onClick={()=>{router.push("/guest_entry")}}>Guest Entry</button>
+          </div>
+          </div>
       </header>
     </main>
   )
