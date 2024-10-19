@@ -102,7 +102,7 @@ def regular_entry():
 
 
 @app.route("/home_entry", methods=["POST"])
-def update_entry():
+def home_entry():
     entry_number = request.get_json().get("entry_number")
 
     conn = sqlite3.connect("Entry_Gate.db")
@@ -111,16 +111,16 @@ def update_entry():
     a = cur.fetchone()
     if a is None:
         return "Invalid Entry Number"
-    cur.execute(f'select * from Regular_entry where Entry_No="{entry_number}"')
+    cur.execute(f'select * from Home_entry where Entry_No="{entry_number}"')
     b = cur.fetchall()
     if len(b) != 0:
         a = b[-1]
         if a[4] == "NULL":
-            cur.execute(f'UPDATE Regular_entry SET time_in = ? WHERE Entry_No = ? AND time_in = "NULL"', (datetime.strftime(datetime.now(),"%d-%m-%Y %H:%M:%S"), entry_number))
+            cur.execute(f'UPDATE Home_entry SET date_in = ? WHERE Entry_No = ? AND date_in = "NULL"', (datetime.strftime(datetime.now(),"%d-%m-%Y %H:%M:%S"), entry_number))
         else:
-            cur.execute('insert into Regular_entry values(?,?,?,?,?)',(a[0],a[1],a[2],datetime.strftime(datetime.now(),'%d-%m-%Y %H:%M:%S'), "NULL"))
+            cur.execute('insert into Home_entry values(?,?,?,?,?)',(a[0],a[1],a[2],datetime.strftime(datetime.now(),'%d-%m-%Y %H:%M:%S'), "NULL"))
     else:
-        cur.execute('insert into Regular_entry values(?,?,?,?,?)',(a[0], a[1], a[2], datetime.strftime(datetime.now(),'%d-%m-%Y %H:%M:%S'), "NULL"))
+        cur.execute('insert into Home_entry values(?,?,?,?,?)',(a[0], a[1], a[2], datetime.strftime(datetime.now(),'%d-%m-%Y %H:%M:%S'), "NULL"))
 
     conn.commit()
     conn.close()
