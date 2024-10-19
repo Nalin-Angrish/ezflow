@@ -38,7 +38,7 @@ export default function StudentEntry(){
         clearInterval(intervalId);
         const entry_number = String(response.data) 
         console.log(entry_number)
-        axios.post("http://localhost:5000/update_entry", {entry_number:entry_number})
+        axios.post("http://localhost:5000/home_entry", {entry_number:entry_number})
           .then(resp=>{
             toast.success(resp.data, {
               theme: "dark"
